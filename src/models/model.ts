@@ -19,7 +19,7 @@ class Model {
     return result;
   };
 
-  insertInto = async (newInstance: object) => {
+  insertInto = async (newInstance: Record<string, unknown>) => {
     const proprieties: string[] = Object.keys(newInstance);
     const values = Object.values(newInstance);
     const [{ insertId }] = await connection.execute<ResultSetHeader>(
@@ -28,7 +28,9 @@ class Model {
       [...values],
     );
 
-    return { id: insertId, ...newInstance };
+    const response = { id: insertId, ...newInstance };
+
+    return response;
   };
 
   deleteById = async (id: number | string): Promise<void> => {
