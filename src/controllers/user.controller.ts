@@ -15,6 +15,18 @@ class UserController extends Controller {
     const result = await this.service.newUser(user);
     res.status(201).json(result);
   };
+
+  login = async (req: Request, res: Response) => {
+    try {
+      const { username, password } = req.body;
+      const token = await this.service.login({ username, password });
+      res.status(200).json(token);
+    } catch (err) {
+      const { message } = err as Error;
+      const statusCode = message.includes('required') ? 400 : 401;
+      res.status(statusCode).json({ message });
+    }
+  };
 }
 
 const userController = new UserController();
