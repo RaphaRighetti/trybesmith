@@ -12,11 +12,7 @@ export const generateToken = (payload: JwtPayload): string => {
 };
 
 export const verifyToken = (token: string) => {
-  try {
-    // const payload = jwt.verify(token, process.env.JWT_SECRET as string);
-    const payload = jwt.verify(token, 'secret');
-    return payload;
-  } catch (err) {
-    return 'faça login para prosseguir';
-  }
+  // const payload = jwt.verify(token, process.env.JWT_SECRET as string);
+  const payload = jwt.verify(token, 'secret');
+  return payload;
 };

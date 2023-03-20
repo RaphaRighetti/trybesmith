@@ -1,18 +1,16 @@
 import { Request, Response, NextFunction } from 'express';
-import { JwtPayload } from 'jsonwebtoken';
 import { verifyToken } from '../auth/jwt';
 
-interface CustomRequest extends Request {
-  payload: string | JwtPayload
-}
-
-export default async (req: CustomRequest, res: Response, next: NextFunction) => {
-  const { authorization: token } = req.headers;
+export default async (req: Request, res: Response, next: NextFunction) => {
   try {
+    const { authorization: token } = req.headers;
+    if (!token) throw new Error('Token not found');
     const payload = verifyToken(token as string);
-    req.payload = payload;
+    req.body = { ...req.body, payload };
     next();
   } catch (err) {
-    res.status(201).json({ message: 'efetue login para continuar' });
+    const { message } = err as Error;
+    const newMessage = message.includes('not found') ? message : 'Invalid token';
+    res.status(401).json({ message: newMessage });
   }
 };

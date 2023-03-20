@@ -15,6 +15,18 @@ class OrderController extends Controller {
     const result = await this.service.getOrders();
     res.status(200).json(result);
   };
+
+  insertOrder = async (req: Request, res: Response) => {
+    try {
+      const { payload, ...order } = req.body;
+      const result = await this.service.insertOrder(order, payload.id);
+      res.status(201).json(result);
+    } catch (err) {
+      const { message } = err as Error;
+      const statusCode = message.includes('required') ? 400 : 422;
+      res.status(statusCode).json({ message });
+    }
+  };
 }
 
 const orderController = new OrderController();
